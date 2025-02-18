@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Painel Administrativo</h2>
+
+        <h3>Atualizar Usuário</h3>
+        <form method="POST">
+            <label for="username">Nome de Usuário:</label>
+            <input type="text" name="username" required>
+            <label for="new_username">Novo Nome de Usuário:</label>
+            <input type="text" name="new_username">
+            <label for="new_password">Nova Senha:</label>
+            <input type="password" name="new_password">
+            <button type="submit">Atualizar</button>
+        </form>
+
+        <h3>Usuários Não Administradores</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome de Usuário</th>
+                    <th>Senha</th>
+                    <th>Ações</th> <!-- Coluna para ações -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.password }}</td>
+                    <td style="text-align: center;"> <!-- Centraliza o botão -->
+                        <form method="POST" action="{{ url_for('delete_user', user_id=user.id) }}">
+                            <button type="submit" onclick="return confirm('Tem certeza que deseja excluir este usuário?');">Excluir</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul>
+                {% for message in messages %}
+                    <li class="success-message">{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Botão para voltar ao login -->
+        <div style="margin-top: 20px; text-align: center;">
+            <a href="{{ url_for('login') }}" class="button">Voltar ao Login</a>
+        </div>
+    </div>
+</body>
+</html>

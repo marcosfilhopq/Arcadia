@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Bem-vindo ao Dashboard!</h2>
+        <p>Você está logado como {{ session['username'] }}.</p>
+
+        <!-- Botão para abrir o jogo -->
+        <a href="start_minesweeper" target="_blank" class="button">Jogar Campo Minado</a>
+
+        <!-- Botão de logout -->
+        <a href="{{ url_for('logout') }}" class="button">Sair</a>
+    </div>
+</body>
+</html>
