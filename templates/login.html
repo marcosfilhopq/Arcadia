@@ -5,6 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #responseMessage {
+            margin-top: 10px;
+            color: blue;
+        }
+        h3 {
+            margin-top: 50px;
+        }
+        .back-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007bff; /* Cor do botão de voltar */
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block; /* Garante que o botão seja um bloco inline */
+        }
+        .back-button:hover {
+            background-color: #0056b3; /* Cor do botão de voltar ao passar o mouse */
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -16,6 +71,7 @@
             <input type="password" name="password" required>
             <button type="submit">Entrar</button>
         </form>
+        
         {% with messages = get_flashed_messages() %}
             {% if messages %}
                 <ul>
@@ -25,8 +81,32 @@
                 </ul>
             {% endif %}
         {% endwith %}
+        
         <p>Ainda não tem uma conta? <a href="{{ url_for('register') }}">Criar Conta</a></p>
         <p><a href="{{ url_for('admin_login') }}">Área Administrativa</a></p> <!-- Link para a área administrativa -->
+
+        <h3>Fala conosco</h3>
+        <!-- Link para acessar o chat -->
+        <p><a href="{{ url_for('chat') }}">Acessar Chat</a></p> <!-- Link para a página de chat -->
+
+        <!-- Botão para voltar para a página inicial -->
+        <a href="{{ url_for('home_page') }}" class="back-button">Voltar para a Home</a>
     </div>
+
+    <script>
+        const socket = io();  // Conecta ao servidor SocketIO
+
+        // Envia uma mensagem ao servidor quando o botão é clicado
+        document.getElementById('sendMessageButton').onclick = function() {
+            const message = document.getElementById('messageInput').value;
+            socket.emit('message', {data: message});
+            document.getElementById('messageInput').value = '';  // Limpa o campo de entrada
+        };
+
+        // Escuta por respostas do servidor
+        socket.on('response', function(data) {
+            document.getElementById('responseMessage').innerText = data.data;  // Exibe a resposta na tela
+        });
+    </script>
 </body>
 </html>

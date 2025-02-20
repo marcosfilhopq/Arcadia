@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat de Suporte</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        #messages {
+            height: 300px;
+            overflow-y: scroll;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: white;
+        }
+        .user-message {
+            color: blue; /* Cor para mensagens de usuários */
+        }
+        .support-message {
+            color: green; /* Cor para mensagens de suporte */
+        }
+        button {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chat de Suporte</h1>
+    <div id="messages"></div>
+    <input type="text" id="messageInput" placeholder="Digite sua mensagem">
+    <button id="sendMessageButton">Enviar Mensagem</button>
+
+    <!-- Botão para voltar ao login -->
+    <a href="{{ url_for('login') }}" class="btn">Voltar ao Login</a>
+
+    <script>
+        const socket = io();  // Conecta ao servidor SocketIO
+
+        document.getElementById('sendMessageButton').onclick = function() {
+            const message = document.getElementById('messageInput').value;
+            if (message.trim() !== "") {  // Verifica se a mensagem não está vazia
+                socket.emit('message', {data: message});
+                document.getElementById('messageInput').value = '';  // Limpa o campo de entrada
+            }
+        };
+
+        socket.on('response', function(data) {
+            const messagesDiv = document.getElementById('messages');
+            // Adiciona a mensagem ao chat, diferenciando entre usuário e suporte
+            if (data.data.startsWith('Suporte:')) {
+                messagesDiv.innerHTML += `<p class="support-message">${data.data}</p>`;  // Mensagem do suporte
+            } else {
+                messagesDiv.innerHTML += `<p class="user-message">${data.data}</p>`;  // Mensagem do usuário
+            }
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;  // Rola para baixo
+        });
+    </script>
+</body>
+</html>

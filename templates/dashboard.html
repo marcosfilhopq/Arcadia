@@ -3,16 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Arcadia</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+        .games {
+            display: flex; /* Usar flexbox para centralizar os cartões */
+            justify-content: center; /* Centraliza os cartões horizontalmente */
+            flex-wrap: wrap; /* Permite que os cartões se movam para a próxima linha se necessário */
+            gap: 20px; /* Espaço entre os cartões */
+            margin-top: 20px;
+        }
+        .game-card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+            text-align: center; /* Alinha o texto ao centro */
+            text-decoration: none; /* Remove o sublinhado do link */
+            color: inherit; /* Herda a cor do texto */
+            cursor: pointer; /* Muda o cursor para indicar que é clicável */
+            display: flex; /* Usar flexbox para centralizar o conteúdo */
+            flex-direction: column; /* Alinha os itens em coluna */
+            align-items: center; /* Centraliza horizontalmente */
+            justify-content: space-between; /* Espaça os itens uniformemente */
+            width: 200px; /* Define uma largura fixa para todos os cartões */
+            height: 400px; /* Define uma altura fixa para todos os cartões */
+        }
+        .game-card:hover {
+            transform: scale(1.05);
+            background-color: #f0f0f0; /* Muda a cor de fundo ao passar o mouse */
+        }
+        .game-card h3 {
+            margin: 10px 0; /* Adiciona margem ao título */
+        }
+        .game-card img {
+            max-width: 80%; /* Faz a imagem ocupar a largura máxima do cartão */
+            height: auto; /* Mantém a proporção da imagem */
+            border-radius: 5px; /* Arredonda os cantos da imagem */
+        }
+        .button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .button:hover {
+            background-color: #218838;
+        }
+    </style>
+    <script>
+        function openGame(url, gameName) {
+            const newWindow = window.open(url, gameName);
+            if (newWindow) {
+                newWindow.document.title = gameName; // Define o título da nova aba
+            } else {
+                alert('Por favor, permita pop-ups para abrir o jogo.');
+            }
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+    <script>
+        const socket = io();  // Conecta ao servidor SocketIO
+    
+        // Envia uma mensagem ao servidor
+        socket.emit('message', {data: 'Olá, servidor! (Esse é um dos teste do WebSocket)'});
+    
+        // Escuta por respostas do servidor
+        socket.on('response', function(data) {
+            console.log(data);
+            alert(data.data);  // Exibe a resposta em um alerta
+        });
+    </script>
 </head>
 <body>
     <div class="container">
-        <h2>Bem-vindo ao Dashboard!</h2>
+        <h2>Bem-vindo ao Arcadia!</h2>
         <p>Você está logado como {{ session['username'] }}.</p>
 
-        <!-- Botão para abrir o jogo -->
-        <a href="start_minesweeper" target="_blank" class="button">Jogar Campo Minado</a>
+        <div class="games">
+            <!-- Cartão para o jogo Campo Minado -->
+            <div class="game-card" onclick="openGame('/start_minesweeper', 'Campo Minado')">
+                <img src="{{ url_for('static', filename='images/campominado.png') }}" alt="Campo Minado">
+                <h3>Campo Minado</h3>
+                <p>Teste suas habilidades e encontre as minas!</p>
+            </div>
+
+            <!-- Cartão para o jogo da velha -->
+            <div class="game-card" onclick="openGame('/jogodavelha', 'Jogo da Velha')">
+                <img src="{{ url_for('static', filename='images/jogovelha.png') }}" alt="Jogo da Velha">
+                <h3>Jogo da Velha</h3>
+                <p>Desafie um amigo ou jogue contra você mesmo!</p>
+            </div>
+
+            <!-- Cartão para o jogo Pedra, Papel, Tesoura, Lagarto, Spock -->
+            <div class="game-card" onclick="openGame('/ppt', 'Pedra, Papel, Tesoura')">
+                <img src="{{ url_for('static', filename='images/ppt.png') }}" alt="Pedra, Papel, Tesoura">
+                <h3>Pedra, Papel, Tesoura, Lagarto, Spock</h3>
+                <p>Escolha sua jogada e vença o computador!</p>
+            </div>
+
+            <!-- Cartão para o jogo da cobrinha -->
+            <div class="game-card" onclick="openGame('/cobrinha', 'Cobrinha')">
+                <img src="{{ url_for('static', filename='images/cobrinha.png') }}" alt="Cobrinha">
+                <h3>Cobrinha</h3>
+                <p>Coma, coma, coma até não caber no mapa!</p>
+            </div>
+        </div>
 
         <!-- Botão de logout -->
         <a href="{{ url_for('logout') }}" class="button">Sair</a>

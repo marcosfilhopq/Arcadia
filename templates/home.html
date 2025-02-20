@@ -3,10 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página Inicial</title>
+    <title>Página Inicial - Arcadia</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        p {
+            margin: 10px 0;
+        }
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        a:hover {
+            background-color: #218838;
+        }
+    </style>
 </head>
 <body>
-    <h1>Bem-vindo, {{ username }}!</h1>
-    <a href="{{ url_for('logout') }}">Sair</a>
+    <div class="container">
+        <h1>Bem-vindo ao Arcadia!</h1>
+        <p>Arcadia é um pequeno arcade onde você pode jogar diversos jogos clássicos e se divertir com amigos!</p>
+        <p>Explore nossos jogos e desafie-se em cada um deles!</p>
+        
+        <p>Para acessar sua conta, faça login ou registre-se:</p>
+        <a href="{{ url_for('login') }}">Login</a>
+        <a href="{{ url_for('register') }}">Registrar</a>
+    </div>
 </body>
 </html>
