@@ -1,6 +1,10 @@
 Flask==2.0.1
 Flask-SQLAlchemy==2.5.1
 pygame==2.0.1
+Requests
+Random
+Tkinter
+Sqlite3
 Flask-SocketIO==5.0.1
 Flask-Migrate
 Coverage
